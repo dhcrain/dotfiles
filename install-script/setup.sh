@@ -26,6 +26,9 @@ else
   echo_ok "🍺Homebrew already installed"
 fi
 
+(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/davis.crain/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 echo_ok "Running Brew Doctor... 👨‍⚕️"
 brew doctor
 
@@ -46,6 +49,7 @@ read -p "Press [Enter] key after this..."
 
 if test ! $(which g++); then
   echo_ok "Installing xcode-stuff"
+  sudo rm -rf /Library/Developer/CommandLineTools
   xcode-select --install
 else
   echo_ok "xcode cl tools already installed"
@@ -119,6 +123,8 @@ cd ~
 echo_ok "Installing apps from Brewfile 🙌"
 brew bundle
 cd -
+
+echo "source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
 
 brew cleanup
 brew doctor

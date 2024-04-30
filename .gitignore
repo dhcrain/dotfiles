@@ -12,3 +12,4 @@ custom-configs/peloton_zshrc.sh
 config/configstore/*
 config/direnv/*
 tags
+config/github-copilot

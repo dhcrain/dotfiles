@@ -151,7 +151,7 @@ fi
 # >>1
 
 # Source Syntaxhighlighting <<1
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # >>1
 
 
@@ -199,3 +199,5 @@ timezsh() {
 
 # Uncomment this and the top line to profile zsh startup
 # zprof
+
+source $HOME/.peloton/.peloton_zshrc
