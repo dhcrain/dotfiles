@@ -142,7 +142,7 @@ brew install direnv
 # echo_warn "Login to Dropbox and have the Dropbox folder in the $HOME directory."
 # read -p "Press [Enter] once this is done."
 
-echo_warn "Find the settings for iTerm2 in Dropbox and link each one of these applications with their corresponding settings file. Also setup 1Password to sync with Dropbox."
+echo_warn "Find the settings for iTerm2 in Dropbox and link each one of these applications with their corresponding settings file."
 read -p "Press [Enter] once this is done."
 
 # echo_ok "Installing Angular CLI"

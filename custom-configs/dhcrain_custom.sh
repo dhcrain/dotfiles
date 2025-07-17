@@ -137,7 +137,7 @@ github() {
 
 # Get the weather for given location <<2
 weather() {
-	curl wttr.in/$1
+	curl wttr.in/$1?u
 }
 
 
@@ -173,7 +173,7 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 # >>1
 
-# inspierd from http://erikaybar.name/git-deleting-old-local-branches/
+# inspired from http://erikaybar.name/git-deleting-old-local-branches/
 clean-git() {
 	IFS=$'\n' originDeleted=($(git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}'))
 	IFS=$'\n' notPushed=($(git branch -vv | grep -v origin | awk '{print $1}'))
@@ -198,7 +198,7 @@ clean-git() {
 				echo "Burn with Fire"
 				echo $branches | xargs git branch -D
 			else
-				echo "Nothing Delted"
+				echo "Nothing Deleted"
 			fi
 		else
 		 echo "Local repo is untouched"
@@ -314,5 +314,36 @@ function renametab () {
 function searchman () {
     man $1 | less +/$2
 }
+
+# https://gitlab.com/EvanHahn/dotfiles/-/blob/42af33e66387598b174694e3c088ba39d823f8ad/home/bin/bin/getsong
+function getsong () {
+	# youtube-dl --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s" $1
+	yt-dlp -f bestaudio -o '%(title)s.%(ext)s' "$@"
+}
+# https://esham.io/2025/05/shell-history
+# Navigate to an entry and press Return or Enter, zsh will delete all instances of that command from your history.
+# If you want to delete multiple commands at once, you can select them by pressing Tab on each one and then 
+# typing Return to commit your changes.
+function smite() {
+    setopt LOCAL_OPTIONS ERR_RETURN PIPE_FAIL
+
+    local opts=( -I )
+    if [[ $1 == '-a' ]]; then
+        opts=()
+    elif [[ -n $1 ]]; then
+        print >&2 'usage: smite [-a]'
+        return 1
+    fi
+
+    fc -l -n $opts 1 | \
+        fzf --no-sort --tac --multi | \
+        while IFS='' read -r command_to_delete; do
+            printf 'Removing history entry "%s"\n' $command_to_delete
+            local HISTORY_IGNORE="${(b)command_to_delete}"
+            fc -W
+            fc -p $HISTFILE $HISTSIZE $SAVEHIST
+        done
+}
+
 
 fpath+=~/.zfunc
