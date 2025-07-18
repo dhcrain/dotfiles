@@ -13,3 +13,4 @@ config/configstore/*
 config/direnv/*
 tags
 config/github-copilot
+install_output.sh

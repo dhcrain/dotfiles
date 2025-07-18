@@ -15,7 +15,10 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until script has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-chown -R $(whoami):admin /usr/local
+# Only try to change ownership if /usr/local exists and we have permission
+if [ -d "/usr/local" ] && [ -w "/usr/local" ]; then
+    sudo chown -R $(whoami):admin /usr/local
+fi
 
 # Check for Homebrew,
 # Install if we don't have it
@@ -26,7 +29,7 @@ else
   echo_ok "🍺Homebrew already installed"
 fi
 
-(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/davis.crain/.zprofile
+(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/daviscrain/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 echo_ok "Running Brew Doctor... 👨‍⚕️"
@@ -93,22 +96,22 @@ ln -sf ~/dotfiles/tmux/tmux.conf ~/.tmux.conf
 SYMLINKS+=('.tmux.conf')
 
 
-if [ -n "$(find ~/dotfiles/custom-configs -name gitconfig)" ]; then
-    ln -s ~/dotfiles/custom-configs/**/gitconfig ~/.gitconfig
+if [ -d ~/dotfiles/custom-configs ] && [ -n "$(find ~/dotfiles/custom-configs -name gitconfig 2>/dev/null)" ]; then
+    ln -s "$(find ~/dotfiles/custom-configs -name gitconfig | head -1)" ~/.gitconfig
 else
     ln -s ~/dotfiles/gitconfig ~/.gitconfig
 fi
 SYMLINKS+=('.gitconfig')
 
-if [ -n "$(find ~/dotfiles/custom-configs -name gitignore_global)" ]; then
-    ln -s ~/dotfiles/custom-configs/**/gitignore_global ~/.gitignore_global
+if [ -d ~/dotfiles/custom-configs ] && [ -n "$(find ~/dotfiles/custom-configs -name gitignore_global 2>/dev/null)" ]; then
+    ln -s "$(find ~/dotfiles/custom-configs -name gitignore_global | head -1)" ~/.gitignore_global
 else
-    ln -s ~/dotfiles/gitignore_global ~/.gitignore_global
+    ln -s ~/dotfiles/custom-configs/gitignore_global ~/.gitignore_global
 fi
 SYMLINKS+=('.gitignore_global')
 
-if [ -n "$(find ~/dotfiles/custom-configs -name psqlrc)" ]; then
-    ln -s ~/dotfiles/custom-configs/**/psqlrc ~/.psqlrc
+if [ -d ~/dotfiles/custom-configs ] && [ -n "$(find ~/dotfiles/custom-configs -name psqlrc 2>/dev/null)" ]; then
+    ln -s "$(find ~/dotfiles/custom-configs -name psqlrc | head -1)" ~/.psqlrc
 else
     ln -s ~/dotfiles/psqlrc ~/.psqlrc
 fi
@@ -133,11 +136,15 @@ echo_warn "Open Firefox and set as default browser 💻"
 read -p "Press [Enter] once this is done."
 
 echo_ok "Installing Python related items 🐍"
-echo " * intalling virturalenv"
-sudo pip3 install virtualenv
+echo " * installing virtualenv via pip with --break-system-packages"
+sudo pip3 install virtualenv --break-system-packages
+echo " * installing uv (fast Python package installer)"
+curl -LsSf https://astral.sh/uv/install.sh | sh
 echo " * installing direnv"
 # http://direnv.net/
 brew install direnv
+
+
 
 # echo_warn "Login to Dropbox and have the Dropbox folder in the $HOME directory."
 # read -p "Press [Enter] once this is done."
@@ -193,6 +200,13 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 echo_ok "Show path in finder windows"
 defaults write com.apple.finder _FXShowPosixPathInTitle -bool true;
+
+echo_ok "Setting fast key repeat rate and short delay"
+defaults write -g InitialKeyRepeat -int 15  # normal minimum is 15 (225 ms)
+defaults write -g KeyRepeat -int 2          # normal minimum is 2 (30 ms)
+
+echo_ok "Enabling full keyboard access (Tab to navigate all controls)"
+defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 killall Dock
 killall Finder
