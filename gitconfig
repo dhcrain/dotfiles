@@ -10,20 +10,20 @@
     deleted = red
     untracked = yellow
 [user]
-	name = Davis Crain
-	email = davis.crain@onepeloton.com
+	name = {{USER_NAME}}
+	email = {{USER_EMAIL}}
 	signingKey = ""
 [push]
     default = matching
 [core]
-	excludesfile = /Users/davis.crain/.gitignore_global
+	excludesfile = {{HOME_PATH}}/.gitignore_global
 	autocrlf = input
 	editor = code --wait
 [gpg]
 	program = gpg
 [commit]
 	gpgSign = false
-	template = /Users/davis.crain/.stCommitMsg
+	template = {{HOME_PATH}}/.stCommitMsg
 [tag]
 	forceSignAnnotated = false
 [init]

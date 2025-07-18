@@ -29,7 +29,7 @@ else
   echo_ok "🍺Homebrew already installed"
 fi
 
-(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/daviscrain/.zprofile
+(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/$USER/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 echo_ok "Running Brew Doctor... 👨‍⚕️"
@@ -44,7 +44,9 @@ echo "export PATH='/usr/local/bin:$PATH'\n" >> ~/.bashrc
 source ~/.bashrc
 
 echo "Creating an SSH key for you..."
-ssh-keygen -t rsa -b 4096 -C "dhcrain@gmail.com"
+read -p "Enter your full name for Git: " USER_NAME
+read -p "Enter your email address for SSH key and Git: " USER_EMAIL
+ssh-keygen -t rsa -b 4096 -C "$USER_EMAIL"
 
 echo_warn "Please add this public key to Github \n"
 echo_ok "https://github.com/settings/keys \n"
@@ -118,6 +120,12 @@ fi
 SYMLINKS+=('.psqlrc')
 
 echo_ok "Symlinks: " ${SYMLINKS[@]}
+
+# Replace placeholders in gitconfig with actual user values
+echo_ok "Configuring Git with your information..."
+sed -i '' "s/{{USER_NAME}}/$USER_NAME/g" ~/.gitconfig
+sed -i '' "s/{{USER_EMAIL}}/$USER_EMAIL/g" ~/.gitconfig
+sed -i '' "s|{{HOME_PATH}}|$HOME|g" ~/.gitconfig
 
 # # hack for... I'm not even sure what... sqlite working in Python with pyenv?
 # sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
