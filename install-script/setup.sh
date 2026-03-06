@@ -75,6 +75,9 @@ sudo rm -rf ~/.config > /dev/null 2>&1
 sudo rm -rf ~/Brewfile > /dev/null 2>&1
 sudo rm -rf ~/.tmux > /dev/null 2>&1
 sudo rm -rf ~/.tmux.conf > /dev/null 2>&1
+sudo rm -rf ~/.claude/settings.json > /dev/null 2>&1
+sudo rm -rf ~/.claude/statusline-command.sh > /dev/null 2>&1
+sudo rm -rf ~/.claude/skills > /dev/null 2>&1
 
 
 #==============
@@ -96,6 +99,13 @@ ln -sf ~/dotfiles/tmux ~/.tmux
 SYMLINKS+=('.tmux')
 ln -sf ~/dotfiles/tmux/tmux.conf ~/.tmux.conf
 SYMLINKS+=('.tmux.conf')
+mkdir -p ~/.claude
+ln -sf ~/dotfiles/config/claude/settings.json ~/.claude/settings.json
+SYMLINKS+=('.claude/settings.json')
+ln -sf ~/dotfiles/config/claude/statusline-command.sh ~/.claude/statusline-command.sh
+SYMLINKS+=('.claude/statusline-command.sh')
+ln -sf ~/dotfiles/config/claude/skills ~/.claude/skills
+SYMLINKS+=('.claude/skills')
 
 
 if [ -d ~/dotfiles/custom-configs ] && [ -n "$(find ~/dotfiles/custom-configs -name gitconfig 2>/dev/null)" ]; then

@@ -13,6 +13,9 @@ brew "speedtest-cli"
 # brew "awscli"
 brew "tmux"
 
+# AI tools
+cask "claude"
+
 # search tools
 brew "ripgrep"
 
