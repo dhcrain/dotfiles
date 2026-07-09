@@ -22,14 +22,14 @@ fi
 
 # Check for Homebrew,
 # Install if we don't have it
-if test ! $(which brew); then
+if ! command -v brew >/dev/null 2>&1; then
   echo_ok "Installing homebrew... 🍺"
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
   echo_ok "🍺Homebrew already installed"
 fi
 
-(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/$USER/.zprofile
+grep -qF 'brew shellenv' /Users/$USER/.zprofile 2>/dev/null || (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/$USER/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 echo_ok "Running Brew Doctor... 👨‍⚕️"
@@ -39,14 +39,14 @@ brew doctor
 echo_ok "Updating homebrew..."
 brew update
 
-# So we use all of the packages we are about to install
-echo "export PATH='/usr/local/bin:$PATH'\n" >> ~/.bashrc
-source ~/.bashrc
-
 echo "Creating an SSH key for you..."
 read -p "Enter your full name for Git: " USER_NAME
 read -p "Enter your email address for SSH key and Git: " USER_EMAIL
-ssh-keygen -t rsa -b 4096 -C "$USER_EMAIL"
+if [ -f ~/.ssh/id_rsa ]; then
+  echo_ok "SSH key already exists, skipping"
+else
+  ssh-keygen -t rsa -b 4096 -C "$USER_EMAIL"
+fi
 
 echo_warn "Please add this public key to Github \n"
 echo_ok "https://github.com/settings/keys \n"
@@ -76,8 +76,9 @@ sudo rm -rf ~/Brewfile > /dev/null 2>&1
 sudo rm -rf ~/.tmux > /dev/null 2>&1
 sudo rm -rf ~/.tmux.conf > /dev/null 2>&1
 sudo rm -rf ~/.claude/settings.json > /dev/null 2>&1
-sudo rm -rf ~/.claude/statusline-command.sh > /dev/null 2>&1
+sudo rm -rf ~/.claude/scripts > /dev/null 2>&1
 sudo rm -rf ~/.claude/skills > /dev/null 2>&1
+sudo rm -rf ~/.claude/CLAUDE.md > /dev/null 2>&1
 
 
 #==============
@@ -102,10 +103,12 @@ SYMLINKS+=('.tmux.conf')
 mkdir -p ~/.claude
 ln -sf ~/dotfiles/config/claude/settings.json ~/.claude/settings.json
 SYMLINKS+=('.claude/settings.json')
-ln -sf ~/dotfiles/config/claude/statusline-command.sh ~/.claude/statusline-command.sh
-SYMLINKS+=('.claude/statusline-command.sh')
+ln -sf ~/dotfiles/config/claude/scripts ~/.claude/scripts
+SYMLINKS+=('.claude/scripts')
 ln -sf ~/dotfiles/config/claude/skills ~/.claude/skills
 SYMLINKS+=('.claude/skills')
+ln -sf ~/dotfiles/config/claude/CLAUDE.md ~/.claude/CLAUDE.md
+SYMLINKS+=('.claude/CLAUDE.md')
 
 
 if [ -d ~/dotfiles/custom-configs ] && [ -n "$(find ~/dotfiles/custom-configs -name gitconfig 2>/dev/null)" ]; then
@@ -144,8 +147,6 @@ cd ~
 echo_ok "Installing apps from Brewfile 🙌"
 brew bundle
 cd -
-
-echo "source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
 
 brew cleanup
 brew doctor

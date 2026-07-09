@@ -93,7 +93,6 @@ setopt  prompt_subst
 #-------------------------------------------------------------------------------
 HISTFILE=$HOME/.zsh_history
 HISTFILESIZE=65536  # search this with `grep | sort -u`
-HISTSIZE=4096
 SAVEHIST=4096
 REPORTTIME=60       # Report time statistics for progs that take more than a minute to run
 # >>2
@@ -101,15 +100,10 @@ REPORTTIME=60       # Report time statistics for progs that take more than a min
 #-------------------------------------------------------------------------------
 export LANG=en_US.UTF-8
 export LC_ALL=$LANG
-export LC_COLLATE=C
 # >>2
 # Set grepoptions <<2
 #-------------------------------------------------------------------------------
-export GREP_OPTIONS='--color=auto'
-# >>2
-# Use the correct ctags <<2
-#-------------------------------------------------------------------------------
-# PATH="~/.pyenv/shims:$PATH"
+alias grep='grep --color=auto'
 # >>2
 # Editor and display configurations <<2
 #-------------------------------------------------------------------------------
@@ -120,7 +114,6 @@ export LESS='-imJMWR'
 export PAGER="less $LESS"
 export MANPAGER=$PAGER
 export GIT_PAGER=$PAGER
-export BROWSER='chromium-browser'
 # >>2
 #
 # Eliminate lag between transition from normal/insert mode <<2
@@ -150,55 +143,68 @@ else
 fi
 # >>1
 
-# Source Syntaxhighlighting <<1
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# >>1
-
 # Source Custom Configurations <<1
-for fname in $(find ~/dotfiles/custom-configs -name "*.sh*"); do
+for fname in ~/dotfiles/custom-configs/**/*.sh(N); do
     source $fname
 done
+
+[[ -f $HOME/.peloton/.peloton_zshrc ]] && source $HOME/.peloton/.peloton_zshrc
+
 # >>1
 
 # Autoload tab completion <<2
 #-------------------------------------------------------------------------------
-# autoload -U compinit
-# compinit -C
 # https://gist.github.com/ctechols/ca1035271ad134841284#gistcomment-2308206
 autoload -Uz compinit
-if [ "$(find ~/.zcompdump -mtime +1)" ] ; then
+# Use zsh glob qualifiers instead of find subprocess: N=nullglob, .=regular file, mh+24=modified >24h ago
+if [[ -n ${HOME}/.zcompdump(#qN.mh+24) ]]; then
     compinit
+else
+    compinit -C
 fi
-compinit -C
+# Compile the dump to bytecode so zsh loads it without re-parsing zsh script text
+if [[ -s "$HOME/.zcompdump" && (! -s "$HOME/.zcompdump.zwc" || "$HOME/.zcompdump" -nt "$HOME/.zcompdump.zwc") ]]; then
+    zcompile "$HOME/.zcompdump"
+fi
 # # >> 2
 
 eval "$(direnv hook zsh)"
 
-PATH="/usr/local/opt/icu4c/bin:$PATH"
-PATH="/usr/local/opt/icu4c/sbin:$PATH"
-PATH="/usr/local/sbin:$PATH"
-export PATH="/Users/davis.crain/.local/bin:$PATH"
-
-export LDFLAGS="-L/usr/local/opt/icu4c/lib"
-export CPPFLAGS="-I/usr/local/opt/icu4c/include"
-export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
-
-
+# Lazy-load pyenv — shims stay on PATH, but defer the init subprocess until first `pyenv` call
 export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-# Load Angular CLI autocompletion.
-# source <(ng completion script)
+export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+pyenv() {
+    unfunction pyenv
+    eval "$(command pyenv init -)"
+    pyenv "$@"
+}
 
 timezsh() {
   shell=${1-$SHELL}
   for i in $(seq 1 4); do /usr/bin/time $shell -i -c exit; done
 }
 
+# Lazy-load SDKMAN — only pay init cost when you first run `sdk`
+export SDKMAN_DIR="$HOME/.sdkman"
+sdk() {
+    unfunction sdk
+    [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+    sdk "$@"
+}
+
+# Added by Antigravity
+export PATH="/Users/davis.crain/.antigravity/antigravity/bin:$PATH"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/davis.crain/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/davis.crain/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/davis.crain/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/davis.crain/google-cloud-sdk/completion.zsh.inc'; fi
+
+# Must load last: wraps zle widgets defined by everything sourced above
+if [[ -f "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+    source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
 # Uncomment this and the top line to profile zsh startup
 # zprof
-
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-. "$HOME/.local/bin/env"
