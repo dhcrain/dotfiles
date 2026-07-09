@@ -10,11 +10,11 @@
     deleted = red
     untracked = yellow
 [user]
-	name = {{USER_NAME}}
-	email = {{USER_EMAIL}}
+	name = Davis Crain
+	email = davis.crain@onepeloton.com
 	signingKey = ""
 [push]
-    default = matching
+	default = current
 [core]
 	excludesfile = {{HOME_PATH}}/.gitignore_global
 	autocrlf = input

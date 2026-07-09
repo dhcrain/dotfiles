@@ -13,7 +13,14 @@ alias gUncommit='git reset HEAD~1 --soft' # Uncommit last unpushed commit
 
 # >>1
 
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
+# export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-17.jdk/Contents/Home
+# export JAVA_HOME= /Users/davis.crain/.sdkman/candidates/java/current
+
+export ANDROID_HOME=/Users/$USER/Library/Android/sdk
+export ANDROID_SDK_ROOT=/Users/$USER/Library/Android/sdk
+export ANDROID_SDK=/Users/$USER/Library/Android/sdk
+export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+
 
 # Do not run brew update when installing with brew
 export HOMEBREW_NO_AUTO_UPDATE=1
@@ -35,7 +42,7 @@ function pyserve() {
 		local_ip=`hostname -I | cut -d " " -f 1`
 	fi
 	echo "connect to $local_ip:8000"
-		python -m SimpleHTTPServer > /dev/null 2>&1
+		python3 -m http.server > /dev/null 2>&1
 	}
 # >>2
 
@@ -232,7 +239,7 @@ function trash() {
 }
 
 function nuke-node-modules() {
-	echo " > Deleteing node_modules and reinstalling"
+	echo " > Deleting node_modules and reinstalling"
 	rm -rf node_modules && npm install
 }
 
@@ -269,14 +276,6 @@ workon_node_env() {
    workon_node_env
  }
  # >>2
-
-# # Run the virtual environments functions for the prompt on each cd <<2
-# # -------------------------------------------------------------------
-# cd() {
-#   builtin cd "$@"
-#   workon_virtualenv
-# }
-# # >>2
 
 make-git-remote() {
 	repoName="$1.git"
@@ -320,6 +319,7 @@ function getsong () {
 	# youtube-dl --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s" $1
 	yt-dlp -f bestaudio -o '%(title)s.%(ext)s' "$@"
 }
+
 # https://esham.io/2025/05/shell-history
 # Navigate to an entry and press Return or Enter, zsh will delete all instances of that command from your history.
 # If you want to delete multiple commands at once, you can select them by pressing Tab on each one and then 

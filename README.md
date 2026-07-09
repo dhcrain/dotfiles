@@ -10,7 +10,7 @@ love the command line, and I know you do, then grab a copy and get coding.
 
 ``` bash
 git clone https://github.com/dhcrain/dotfiles.git ~/dotfiles
-cd ~/dotfiles/install-scripts
+cd ~/dotfiles/install-script
 bash setup.sh
 ```
 
