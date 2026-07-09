@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/davis.crain/dotfiles/homebrew/**)",
+      "Read(//Users/davis.crain/dotfiles/config/claude/**)",
+      "Bash(bash -n /Users/davis.crain/dotfiles/install-script/setup.sh)",
+      "Bash(shellcheck /Users/davis.crain/dotfiles/install-script/setup.sh)"
+    ]
+  }
+}

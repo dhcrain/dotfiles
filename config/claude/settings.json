@@ -1,10 +1,64 @@
 {
-  "skipDangerousModePermissionPrompt": true,
-    "env": {
-    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "AWS_PROFILE": "quarry-opencode",
+    "AWS_REGION": "us-east-1",
+    "AWS_DEFAULT_REGION": "us-east-1",
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "us.anthropic.claude-opus-4-7-v1",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "us.anthropic.claude-sonnet-5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "PATH": "/Users/davis.crain/.antigravity/antigravity/bin:/Users/davis.crain/.codeium/windsurf/bin:/Users/davis.crain/.pyenv/shims:/Users/davis.crain/.local/bin:/usr/local/sbin:/usr/local/opt/icu4c/sbin:/usr/local/opt/icu4c/bin:/usr/local/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/bin:/Users/davis.crain/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/Library/Frameworks/Python.framework/Versions/3.12/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/pmk/env/global/bin:/Applications/iTerm.app/Contents/Resources/utilities:/Users/davis.crain/Library/Application Support/JetBrains/Toolbox/scripts:/Users/davis.crain/Library/Android/sdk/tools:/Users/davis.crain/Library/Android/sdk/platform-tools",
+    "HOME": "/Users/davis.crain"
   },
+  "permissions": {
+    "allow": [
+      "Bash(scripts/test*)",
+      "Bash(scripts/check*)",
+      "Bash(scripts/console*)",
+      "Bash(scripts/install*)",
+      "Bash(scripts/manage*)",
+      "Bash(git:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr:*)",
+      "Bash(claude mcp:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(grep*)",
+      "Bash(time*)",
+      "Bash(xargs ls:*)",
+      "Bash(xargs cat:*)",
+      "Bash(jq:*)",
+      "Bash(cat*)",
+      "Bash(pip index:*)",
+      "Bash(ls*)",
+      "Bash(cat *)",
+      "Bash(less *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(find *)",
+      "Bash(tree *)",
+      "Bash(pwd *)",
+      "Bash(wc *)",
+      "Bash(diff *)",
+      "Bash(sdm status:*)",
+      "Bash(sdm connect:*)",
+      "mcp__sdm-postgres__list_datasources",
+      "mcp__sdm-postgres__get_context",
+      "mcp__sdm-postgres__query",
+      "mcp__sdm-postgres__list_databases",
+      "mcp__sdm-postgres__list_tables",
+      "mcp__sdm-postgres__describe_table"
+    ]
+  },
+  "model": "sonnet",
   "statusLine": {
     "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
-  }
+    "command": "~/.claude/scripts/statusline-command.sh"
+  },
+  "effortLevel": "high",
+  "awaySummaryEnabled": false,
+  "theme": "dark-daltonized"
 }
