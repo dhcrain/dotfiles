@@ -147,3 +147,4 @@ Temporary Items
 .history
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,jetbrains
+**/.claude/settings.local.json

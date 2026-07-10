@@ -140,6 +140,8 @@ sed -i '' "s/{{USER_NAME}}/$USER_NAME/g" ~/.gitconfig
 sed -i '' "s/{{USER_EMAIL}}/$USER_EMAIL/g" ~/.gitconfig
 sed -i '' "s|{{HOME_PATH}}|$HOME|g" ~/.gitconfig
 
+echo_ok "The following symlinks have been created:\n ${SYMLINKS[@]}"
+
 # # hack for... I'm not even sure what... sqlite working in Python with pyenv?
 # sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
 
