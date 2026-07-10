@@ -14,3 +14,4 @@ config/direnv/*
 tags
 config/github-copilot
 install_output.sh
+config/claude/skills/member-lookup/SKILL.md

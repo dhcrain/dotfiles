@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(aws --version)",
+      "Bash(ls *)",
+      "Read(//Users/davis.crain/**)",
+      "Bash(cp /Users/davis.crain/.claude/monitor-hook.sh /Users/davis.crain/dotfiles/config/claude/monitor-hook.sh)",
+      "Bash(mkdir -p /Users/davis.crain/dotfiles/config/claude/scripts)",
+      "Bash(mv /Users/davis.crain/dotfiles/config/claude/statusline-command.sh /Users/davis.crain/dotfiles/config/claude/scripts/statusline-command.sh)"
+    ],
+    "additionalDirectories": [
+      "/Users/davis.crain/.claude"
+    ]
+  }
+}
